@@ -1,0 +1,71 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+
+def load_data():
+    # Load data from various sources
+    sources = ['IRIS', 'WINE', 'BREAST_CANCER']
+    print("Available data sources:")
+    for i, source in enumerate(sources):
+        print(f"{i+1}. {source}")
+    data_source = int(input("Select data source: "))
+    if data_source == 1:
+        data = datasets.load_iris()
+    elif data_source == 2:
+        data = datasets.load_wine()
+    elif data_source == 3:
+        data = datasets.load_breast_cancer()
+    else:
+        raise Exception("Invalid data source selected")
+    X = data.data
+    y = data.target
+    return X, y
+
+def select_algorithm():
+    # Select one of various available machine learning algorithms
+    algorithms = ['Linear Regression', 'K-Nearest Neighbors', 'Decision Tree', 'Random Forest', 'Support Vector Machine']
+    print("Available algorithms:")
+    for i, algorithm in enumerate(algorithms):
+        print(f"{i+1}. {algorithm}")
+    algorithm = int(input("Select algorithm: "))
+    if algorithm == 1:
+        model = LinearRegression()
+    elif algorithm == 2:
+        model = KNeighborsClassifier()
+    elif algorithm == 3:
+        model = DecisionTreeClassifier()
+    elif algorithm == 4:
+        model = RandomForestClassifier()
+    elif algorithm == 5:
+        model = SVC()
+    else:
+        raise Exception("Invalid algorithm selected")
+    return model
+
+def select_input_output(X):
+    # Select model input and output
+    num_features = X.shape[1]
+    print("Available features:")
+    for i in range(num_features):
+        print(f"{i+1}. Feature {i+1}")
+    X_cols = [int(x) for x in input("Enter selected features (separated by space): ").split()]
+    X = X[:, X_cols-1]
+    y_col = int(input("Enter selected output feature: "))
+    y = y[:, y_col-1]
+    return X, y
+
+def train_model(model, X, y):
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+    # Train the model
+    model.fit(X_train, y_train)
+    return model, X_test, y_test
+
+def evaluate_model(model, X_test
